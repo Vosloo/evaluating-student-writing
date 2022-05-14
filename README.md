@@ -2,4 +2,6 @@
 
 <h2> About </h2>
 
-TODO
+[Competition link](https://github.com/Vosloo/evaluating-student-writing)
+
+TODO 
