@@ -2,9 +2,7 @@
 
 <h2> About </h2>
 
-[Competition link](https://github.com/Vosloo/evaluating-student-writing)
-
-TODO
+[Competition link](https://www.kaggle.com/c/feedback-prize-2021)
 
 ----
 
@@ -40,3 +38,15 @@ There are five hooks that are used to check the quality of the code before commi
  - trailing-whitespace - trims trailing whitespace
  - black - runs black autoformatter on files
  - flake8 - checks consistency of code style
+
+From time to time you can run the following command to check if everything is up to date:
+
+```bash
+pre-commit autoupdate
+```
+
+To run the hooks manually run:
+
+```bash
+pre-commit run --all-files
+```
