@@ -22,6 +22,12 @@ Activate the environment and run the following command:
 
 This will prepare pre-commit hooks, download pretrained model for english lanugage for Spacy (accuracy) and extract dataset.
 
+Make sure that the project root directory is added to the PYTHONPATH, to be able to import the code correctly. To add it simply run in project root directory:
+
+```bash
+. ./export_path.sh
+```
+
 To test if everything works run:
 
 ```bash
