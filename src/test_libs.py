@@ -1,9 +1,10 @@
-import spacy
 import numpy as np
 import pandas as pd
-from sklearn.tests.test_init import test_import_skl
+import spacy
+import xgboost as xgb
 from flair.data import Sentence
 from flair.models import SequenceTagger
+from sklearn.tests.test_init import test_import_skl
 
 print("----")
 print("Testing Flair:")
@@ -45,3 +46,9 @@ print("Testing sklearn:")
 print("----")
 
 test_import_skl()
+
+print("----")
+print("Testing xgboost:")
+print("----")
+
+print(xgb.get_config())
