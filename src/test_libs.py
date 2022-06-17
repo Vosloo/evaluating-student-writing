@@ -1,9 +1,9 @@
 import spacy
 import numpy as np
 import pandas as pd
-from sklearn.tests.test_init import test_import_skl  # type: ignore
-from flair.data import Sentence  # type: ignore
-from flair.models import SequenceTagger  # type: ignore
+from sklearn.tests.test_init import test_import_skl
+from flair.data import Sentence
+from flair.models import SequenceTagger
 
 print("----")
 print("Testing Flair:")
