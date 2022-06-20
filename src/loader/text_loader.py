@@ -26,9 +26,9 @@ class TextLoader:
 
         self.unique_ids = self.train_df[ID].unique()
 
-    def __iter__(self) -> Generator[Text, None, None]:
+    def __iter__(self) -> Generator[str, None, None]:
         for text_id in self.unique_ids:
-            yield self.load_text_with_id(text_id)
+            yield text_id
 
     def __len__(self) -> int:
         return len(self.unique_ids)
