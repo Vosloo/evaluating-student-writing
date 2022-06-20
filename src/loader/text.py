@@ -1,4 +1,4 @@
-from src.discourse import Discourse
+from src.loader import Discourse
 
 
 class Text:
@@ -8,7 +8,7 @@ class Text:
         self.discourses = discourses
 
     def __str__(self) -> str:
-        return f"Text id: {self.text_id}\n" f"text: `{self.text}`\n" f"discourses: {self.discourses}"
+        return f"Text id: {self.text_id}; Length: {len(self.text)}; Discourses: {len(self.discourses)}"
 
     def __repr__(self) -> str:
         return repr(self.__str__())

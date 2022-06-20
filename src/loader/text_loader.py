@@ -1,8 +1,10 @@
+from typing import Generator
+
 import pandas as pd
+from src.loader import Discourse, Text
+from src.purifier import Purifier
 
-from src.discourse import Discourse
-from src.text import Text
-
+ID = "id"
 
 DISCOURSE_ID = "discourse_id"
 DISCOURSE_START = "discourse_start"
@@ -22,20 +24,35 @@ class TextLoader:
             {DISCOURSE_ID: int, DISCOURSE_START: int, DISCOURSE_END: int}
         )
 
-    def load_text_with_id(self, text_id: str) -> Text:
+        self.unique_ids = self.train_df[ID].unique()
+
+    def __iter__(self) -> Generator[Text, None, None]:
+        for text_id in self.unique_ids:
+            yield self.load_text_with_id(text_id)
+
+    def __len__(self) -> int:
+        return len(self.unique_ids)
+
+    def load_text_with_id(self, text_id: str, purify_discourses: bool = False) -> Text:
         with open(self.TRAIN_DIR + "/" + text_id + ".txt", "r") as f:
             text = f.read()
 
-        discourses_df = self.train_df.loc[self.train_df["id"] == text_id].reset_index(drop=True)
+        discourses_df: pd.DataFrame = self.train_df.loc[self.train_df[ID] == text_id].reset_index(
+            drop=True
+        )
+        if purify_discourses:
+            discourses_df.loc[:, DISCOURSE_TEXT] = discourses_df[DISCOURSE_TEXT].apply(
+                Purifier.purify_text
+            )
 
         discourses = []
         for row in discourses_df.itertuples():
             discourse = Discourse(
-                row.discourse_id,
-                row.discourse_start,
-                row.discourse_end,
-                row.discourse_text,
-                row.discourse_type,
+                row.discourse_id,  # type: ignore[attr-defined]
+                row.discourse_start,  # type: ignore[attr-defined]
+                row.discourse_end,  # type: ignore[attr-defined]
+                row.discourse_text,  # type: ignore[attr-defined]
+                row.discourse_type,  # type: ignore[attr-defined]
             )
             discourses.append(discourse)
 
@@ -44,5 +61,11 @@ class TextLoader:
 
 if __name__ == "__main__":
     text_loader = TextLoader()
-    text = text_loader.load_text_with_id("423A1CA112E2")
-    print(repr(text))
+
+    counter = 0
+    for text in text_loader:
+        if counter == 10:
+            break
+
+        print(text)
+        counter += 1
