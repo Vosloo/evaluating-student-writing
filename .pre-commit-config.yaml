@@ -29,5 +29,6 @@ repos:
             - --warn-redundant-casts
             - --warn-unreachable
             - --show-error-context
+            - --show-error-codes
             - --pretty
         language: system
