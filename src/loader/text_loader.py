@@ -63,9 +63,11 @@ if __name__ == "__main__":
     text_loader = TextLoader()
 
     counter = 0
-    for text in text_loader:
+    for text_id in text_loader:
         if counter == 10:
             break
+
+        text = text_loader.load_text_with_id(text_id, purify_discourses=True)
 
         print(text)
         counter += 1
