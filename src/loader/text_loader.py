@@ -1,5 +1,6 @@
 from typing import Generator
 
+import numpy as np
 import pandas as pd
 from src.loader import Discourse, Text
 from src.purifier import Purifier
@@ -21,7 +22,7 @@ class TextLoader:
 
     def __init__(self) -> None:
         self.train_df = pd.read_csv(self.TRAIN_CSV).astype(
-            {DISCOURSE_ID: int, DISCOURSE_START: int, DISCOURSE_END: int}
+            {DISCOURSE_ID: np.int64, DISCOURSE_START: np.int64, DISCOURSE_END: np.int64}
         )
 
         self.unique_ids = self.train_df[ID].unique()
@@ -34,16 +35,14 @@ class TextLoader:
         return len(self.unique_ids)
 
     def load_text_with_id(self, text_id: str, purify_discourses: bool = False) -> Text:
-        with open(self.TRAIN_DIR + "/" + text_id + ".txt", "r") as f:
+        with open(self.TRAIN_DIR + "/" + text_id + ".txt", "r", encoding="utf-8") as f:
             text = f.read()
 
         discourses_df: pd.DataFrame = self.train_df.loc[self.train_df[ID] == text_id].reset_index(
             drop=True
         )
         if purify_discourses:
-            discourses_df.loc[:, DISCOURSE_TEXT] = discourses_df[DISCOURSE_TEXT].apply(
-                Purifier.purify_text
-            )
+            discourses_df.loc[:, DISCOURSE_TEXT] = discourses_df[DISCOURSE_TEXT].apply(Purifier.purify)
 
         discourses = []
         for row in discourses_df.itertuples():
