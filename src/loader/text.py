@@ -11,4 +11,7 @@ class Text:
         return f"Text id: {self.text_id}; Length: {len(self.text)}; Discourses: {len(self.discourses)}"
 
     def __repr__(self) -> str:
-        return repr(self.__str__())
+        return repr(self.text)
+
+    def __len__(self) -> int:
+        return len(self.text)
