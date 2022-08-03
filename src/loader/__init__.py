@@ -1,5 +1,4 @@
-__all__ = ["TextLoader", "Text", "Discourse"]
+__all__ = ["TextLoader"]
 
-from .discourse import Discourse
-from .text import Text
-from .text_loader import TextLoader
+
+from src.loader.text_loader import TextLoader
