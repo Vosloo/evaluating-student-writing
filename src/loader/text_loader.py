@@ -2,6 +2,7 @@ from typing import Generator
 
 import numpy as np
 import pandas as pd
+from definitions import ROOT_DIR
 from src.loader import Discourse, Text
 from src.purifier import Purifier
 
@@ -15,7 +16,7 @@ DISCOURSE_TYPE = "discourse_type"
 
 
 class TextLoader:
-    DATASET_PATH = "data/dataset"
+    DATASET_PATH = ROOT_DIR + "/data/dataset"
     TRAIN_DIR = DATASET_PATH + "/train"
     TEST_DIR = DATASET_PATH + "/test"
     TRAIN_CSV = DATASET_PATH + "/train.csv"
@@ -25,7 +26,7 @@ class TextLoader:
             {DISCOURSE_ID: np.int64, DISCOURSE_START: np.int64, DISCOURSE_END: np.int64}
         )
 
-        self.unique_ids = self.train_df[ID].unique()
+        self.unique_ids = np.array(self.train_df[ID].unique())
 
     def __iter__(self) -> Generator[str, None, None]:
         for text_id in self.unique_ids:
@@ -34,9 +35,17 @@ class TextLoader:
     def __len__(self) -> int:
         return len(self.unique_ids)
 
-    def load_text_with_id(self, text_id: str, purify_discourses: bool = False) -> Text:
+    def get_train_df(self) -> pd.DataFrame:
+        return self.train_df
+
+    def load_text_with_id(
+        self, text_id: str, purify_discourses: bool = False, purify_text: bool = False
+    ) -> Text:
         with open(self.TRAIN_DIR + "/" + text_id + ".txt", "r", encoding="utf-8") as f:
             text = f.read()
+
+        if purify_text:
+            text = Purifier.purify(text)
 
         discourses_df: pd.DataFrame = self.train_df.loc[self.train_df[ID] == text_id].reset_index(
             drop=True
@@ -56,6 +65,11 @@ class TextLoader:
             discourses.append(discourse)
 
         return Text(text_id, text, discourses)
+
+    def load_random_text(self, purify_discourses: bool = False) -> Text:
+        text_id = np.random.choice(self.unique_ids)
+
+        return self.load_text_with_id(text_id, purify_discourses)
 
 
 if __name__ == "__main__":

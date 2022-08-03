@@ -15,3 +15,9 @@ class Text:
 
     def __len__(self) -> int:
         return len(self.text)
+
+    def __getitem__(self, index: int) -> str:
+        return self.text[index]
+
+    def __getslice__(self, start: int, end: int) -> str:
+        return self.text[start:end]
