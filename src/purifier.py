@@ -2,6 +2,8 @@ import regex as re
 
 
 class Purifier:
+    REGEX_ATTACHMENT_NUMBER = (r"\(\d{1,}\)", "")
+    REGEX_LEAVE_LETTERS_CHARACTERS = (r"[^\p{L}\d\s\n'.]", "")
     REGEX_MULTIPLE_NEWLINES = (r"\n{2,}", "\n")
     REGEX_NEWLINES_SENTENCES = (r"\n(.)", r" \1")
     REGEX_MULTIPLE_SPACES = (r" {2,}", " ")
@@ -14,6 +16,8 @@ class Purifier:
 
     @staticmethod
     def purify(text: str) -> str:
+        text = re.sub(*Purifier.REGEX_ATTACHMENT_NUMBER, text)
+        text = re.sub(*Purifier.REGEX_LEAVE_LETTERS_CHARACTERS, text)
         text = re.sub(*Purifier.REGEX_MULTIPLE_NEWLINES, text)
         text = re.sub(*Purifier.REGEX_NEWLINES_SENTENCES, text)
         text = re.sub(*Purifier.REGEX_MULTIPLE_SPACES, text)
