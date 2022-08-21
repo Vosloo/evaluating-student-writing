@@ -6,6 +6,7 @@ class Purifier:
     REGEX_LEAVE_LETTERS_CHARACTERS = (r"[^\p{L}\d\s\n'.]", "")
     REGEX_MULTIPLE_NEWLINES = (r"\n{2,}", "\n")
     REGEX_NEWLINES_SENTENCES = (r"\n(.)", r" \1")
+    REGEX_HEX_SPACE = (r"\xa0", " ")
     REGEX_MULTIPLE_SPACES = (r" {2,}", " ")
     REGEX_SPACE_AFTER_CHAR = (r"(\w) ([,.])", r"\1\2 ")  # a . => a.
     REGEX_SPACE_AFTER_COMMA = (
@@ -21,6 +22,7 @@ class Purifier:
         text = re.sub(*Purifier.REGEX_MULTIPLE_NEWLINES, text)
         text = re.sub(*Purifier.REGEX_NEWLINES_SENTENCES, text)
         text = re.sub(*Purifier.REGEX_MULTIPLE_SPACES, text)
+        text = re.sub(*Purifier.REGEX_HEX_SPACE, text)
         text = re.sub(*Purifier.REGEX_SPACE_AFTER_CHAR, text)
         text = re.sub(*Purifier.REGEX_SPACE_AFTER_COMMA, text)
         text = re.sub(*Purifier.REGEX_SPACE_COMMA, text)

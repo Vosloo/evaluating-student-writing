@@ -3,7 +3,7 @@ from typing import Generator
 import numpy as np
 import pandas as pd
 from definitions import ROOT_DIR
-from src.loader import Discourse, Text
+from src.model import Discourse, Text
 from src.purifier import Purifier
 
 ID = "id"
