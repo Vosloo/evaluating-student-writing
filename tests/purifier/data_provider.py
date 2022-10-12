@@ -27,5 +27,5 @@ def get_test_cases() -> list[dict[str, str]]:
                 + "realaity we dont need them all they do is cause a mess in the prosses. so i belive "
                 + "that we shuld stop the electoral college and do direct voit insted."
             ),
-        }
+        },
     ]

@@ -1,4 +1,4 @@
 #!/bin/sh
 
 . ./export_path.sh
-pytest
+python -m pytest -vvv tests
