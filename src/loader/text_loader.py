@@ -27,6 +27,7 @@ class TextLoader:
         )
 
         self.unique_ids = np.array(self.train_df[ID].unique())
+        self.purifier: Purifier = Purifier()
 
     def __iter__(self) -> Generator[str, None, None]:
         for text_id in self.unique_ids:
@@ -45,13 +46,15 @@ class TextLoader:
             text = f.read()
 
         if purify_text:
-            text = Purifier.purify(text)
+            text = self.purifier.purify(text)
 
         discourses_df: pd.DataFrame = self.train_df.loc[self.train_df[ID] == text_id].reset_index(
             drop=True
         )
         if purify_discourses:
-            discourses_df.loc[:, DISCOURSE_TEXT] = discourses_df[DISCOURSE_TEXT].apply(Purifier.purify)
+            discourses_df.loc[:, DISCOURSE_TEXT] = discourses_df[DISCOURSE_TEXT].apply(
+                self.purifier.purify
+            )
 
         discourses = []
         for row in discourses_df.itertuples():
