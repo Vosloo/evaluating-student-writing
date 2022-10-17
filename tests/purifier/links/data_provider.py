@@ -3,19 +3,21 @@ from typing import Generator
 from src.loader import TextLoader
 from src.model import Text
 
-CASES_WITH_LINKS = ["D14A82EE41BF", "E7C2FE6B860D"]
-EXPECTED_MATCHES = {
+CASES_WITH_LINKS = ["D14A82EE41BF", "D5D31918A943", "E7C2FE6B860D"]
+EXPECTED_MATCHES: dict[str, list[str]] = {
     "D14A82EE41BF": [
-        "https://www. netsafeutah. org/teens/staysafe/distracted_driving",
-        "https://www. nhtsa. gov/risky-driving/distracted-driving",
-        "https://www. abc. net",
+        "https://www.netsafeutah.org/teens/staysafe/distracted_driving.html",
+        "https://www. nhtsa.gov/risky-driving/distracted-driving",
+        "(https://www. abc.net. au/science/articles/2011/10/06/3333955.htm)",
     ],
+    "D5D31918A943": [],
     "E7C2FE6B860D": [
-        "https://www. edgarsnyder. com/car-accident/cause-of-accident/cell-phone/cell-phone-statistics",
-        "https://www. edgarsnyder. com/car-accident/cause-of-accident/cell-phone/cell-phone-statistics",
+        "(https://www. edgarsnyder.com/car-accident/cause-of-accident/cell-phone/cell-phone-statistics.html)",  # noqa: E501
+        "(https://www. edgarsnyder.com/car-accident/cause-of-accident/cell-phone/cell-phone-statistics.html)",  # noqa: E501
         "DMV.ORG",
-        "www. dmv",
-        "www. edgarsnyder",
+        "www. dmv.org/distracted-driving/texting-and-driving.php.",
+        "Edgarsnyder.com",
+        "www. edgarsnyder.com/car-accident/cause-of-accident/cell-phone/cell-phone-statistics.html.",
     ],
 }
 
