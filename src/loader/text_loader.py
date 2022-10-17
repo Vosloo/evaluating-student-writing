@@ -30,7 +30,8 @@ class TextLoader:
         self.purifier: Purifier = Purifier()
 
     def __iter__(self) -> Generator[str, None, None]:
-        for text_id in self.unique_ids:
+        for ind, text_id in enumerate(self.unique_ids):
+            print(f"\r{ind:4} / {len(self.unique_ids):4}", end="")
             yield text_id
 
     def __len__(self) -> int:
