@@ -14,10 +14,12 @@ class TestLinks:
     def test_links(self, test_case: TYPE_TEST_CASE, purifier: Purifier) -> None:
         links, text = test_case
 
-        pattern, _ = purifier._get_regex_links()
-        dot_domains = purifier.REGEX_DOT_DOMAIN
+        pattern, _ = purifier._embed_domains(Purifier.REGEX_LINKS)
+        dot_domains = purifier._embed_domains(Purifier.REGEX_DOT_DOMAIN)
         text = re.sub(*dot_domains, text.text)
         found_links = re.findall(pattern, text, flags=re.IGNORECASE)
+        print(found_links)
         assert len(found_links) == len(links)
         for ind, link in enumerate(links):
-            assert link == found_links[ind]
+            found_link, _ = found_links[ind]  # _ contains named group "sub_domains" included in link
+            assert link == found_link
