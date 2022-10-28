@@ -1,9 +1,12 @@
 import regex as re
 
+COMMON_DOMAINS = ["org", "com", "html", "htm", "en", "uk", "net", "edu", "php", "gov", "info", "au"]
+
 
 class Purifier:
-    REGEX_ATTACHMENT_NUMBER = (r"\(\d{1,}\)", "")
-    REGEX_LEAVE_LETTERS_CHARACTERS = (r"[^\p{L}\d\s\n'.]", "")
+    REGEX_ATTACHMENT_NUMBER = (r"\(\d{1,}\)", "")  # (1), (12), etc.
+    # leaves only letters, numbers, spaces, newlines, apostrophes and dots
+    REGEX_LEAVE_LETTER_CHARACTERS = (r"[^\p{L}\d\s\n'.]", "")
     REGEX_MULTIPLE_NEWLINES = (r"\n{2,}", "\n")
     REGEX_NEWLINES_SENTENCES = (r"\n(.)", r" \1")
     REGEX_HEX_SPACE = (r"\xa0", " ")
@@ -13,20 +16,29 @@ class Purifier:
         r"(?P<pre>[^\d]),(?P<after>[^\s])|,(?P<after1>[^\d\s])",  # that,"In => that, "In
         r"\g<pre>, \g<after>\g<after1>",  # 3,477 => 3,477 (stays the same)
     )
-    REGEX_SPACE_COMMA = (r",(\p{L})", r", \1")
+    REGEX_DOT_DOMAIN = (r"\.\s*({domains})", r".\1")
+    REGEX_LINKS = (
+        r"( ?(?:(?:ftp|https?):\/\/(?:www\.)|www\.|\w+@|)? ?\w+(?P<sub_domains>\.(?:{domains}))"
+        r"(?P>sub_domains)*(?:[\w\/-]+)?(?P>sub_domains)?)",
+        "",
+    )
 
-    @staticmethod
-    def purify(text: str) -> str:
+    def purify(self, text: str) -> str:
+        text = re.sub(*Purifier.REGEX_LEAVE_LETTER_CHARACTERS, text)
+        text = re.sub(*self._embed_domains(Purifier.REGEX_DOT_DOMAIN), text, flags=re.IGNORECASE)
+        text = re.sub(*self._embed_domains(Purifier.REGEX_LINKS), text, flags=re.IGNORECASE)
         text = re.sub(*Purifier.REGEX_ATTACHMENT_NUMBER, text)
-        text = re.sub(*Purifier.REGEX_LEAVE_LETTERS_CHARACTERS, text)
+        text = re.sub(*Purifier.REGEX_SPACE_AFTER_CHAR, text)
+        text = re.sub(*Purifier.REGEX_SPACE_AFTER_COMMA, text)
         text = re.sub(*Purifier.REGEX_MULTIPLE_NEWLINES, text)
         text = re.sub(*Purifier.REGEX_NEWLINES_SENTENCES, text)
         text = re.sub(*Purifier.REGEX_MULTIPLE_SPACES, text)
         text = re.sub(*Purifier.REGEX_HEX_SPACE, text)
-        text = re.sub(*Purifier.REGEX_SPACE_AFTER_CHAR, text)
-        text = re.sub(*Purifier.REGEX_SPACE_AFTER_COMMA, text)
-        text = re.sub(*Purifier.REGEX_SPACE_COMMA, text)
         # Again as some spaces could be addedby previous regexps
         text = re.sub(*Purifier.REGEX_MULTIPLE_SPACES, text)
 
         return text.strip()
+
+    def _embed_domains(self, regex_pair: tuple[str, str]) -> tuple[str, str]:
+        pattern, replacement = regex_pair
+        return pattern.format(domains="|".join(COMMON_DOMAINS)), replacement
