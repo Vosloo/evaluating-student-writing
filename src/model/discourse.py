@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import cached_property
 
 
 @dataclass
@@ -10,12 +11,14 @@ class Discourse:
         discourse_end: int,
         discourse_text: str,
         discourse_type: str,
+        predictionstring: str,
     ):
         self.id = discourse_id
         self.ind_start = discourse_start
         self.ind_end = discourse_end
         self.text = discourse_text
         self.type = discourse_type
+        self._predictionstring = predictionstring
 
     def __str__(self) -> str:
         header = f"--- {self.id} ({self.ind_start} -> {self.ind_end}) - {self.type} ---"
@@ -23,3 +26,7 @@ class Discourse:
 
     def __repr__(self) -> str:
         return repr(self.__str__())
+
+    @cached_property
+    def predictionstring(self) -> list[int]:
+        return list(map(int, self._predictionstring.split()))
