@@ -3,7 +3,7 @@ from typing import Generator
 import numpy as np
 import pandas as pd
 from definitions import ROOT_DIR
-from src.model import Discourse, Text
+from src.model import Discourse, Text, DiscourseType
 from src.purifier import Purifier
 
 ID = "id"
@@ -66,7 +66,7 @@ class TextLoader:
                 row.discourse_start,  # type: ignore[attr-defined]
                 row.discourse_end,  # type: ignore[attr-defined]
                 row.discourse_text,  # type: ignore[attr-defined]
-                row.discourse_type,  # type: ignore[attr-defined]
+                DiscourseType(row.discourse_type),  # type: ignore[attr-defined]
                 row.predictionstring,  # type: ignore[attr-defined]
             )
             discourses.append(discourse)
