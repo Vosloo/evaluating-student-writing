@@ -3,7 +3,7 @@ from typing import Generator
 import numpy as np
 import pandas as pd
 from definitions import ROOT_DIR
-from src.model import Discourse, Text
+from src.model import Discourse, Text, DiscourseType
 from src.purifier import Purifier
 
 ID = "id"
@@ -22,23 +22,27 @@ class TextLoader:
     TRAIN_CSV = DATASET_PATH + "/train.csv"
 
     def __init__(self) -> None:
-        self.train_df = pd.read_csv(self.TRAIN_CSV).astype(
+        self._df = pd.read_csv(self.TRAIN_CSV).astype(
             {DISCOURSE_ID: np.int64, DISCOURSE_START: np.int64, DISCOURSE_END: np.int64}
         )
 
-        self.unique_ids = np.array(self.train_df[ID].unique())
+        self.unique_ids = np.array(self._df[ID].unique())
         self.purifier: Purifier = Purifier()
 
     def __iter__(self) -> Generator[str, None, None]:
         for ind, text_id in enumerate(self.unique_ids):
-            print(f"\r{ind:4} / {len(self.unique_ids):4}", end="")
+            print(f"\r{ind + 1:4} / {len(self.unique_ids):4}", end="")
+            if ind + 1 == len(self.unique_ids):
+                print()
+
             yield text_id
 
     def __len__(self) -> int:
         return len(self.unique_ids)
 
-    def get_train_df(self) -> pd.DataFrame:
-        return self.train_df
+    @property
+    def df(self) -> pd.DataFrame:
+        return self._df
 
     def load_text_with_id(
         self, text_id: str, purify_discourses: bool = False, purify_text: bool = False
@@ -49,9 +53,7 @@ class TextLoader:
         if purify_text:
             text = self.purifier.purify(text)
 
-        discourses_df: pd.DataFrame = self.train_df.loc[self.train_df[ID] == text_id].reset_index(
-            drop=True
-        )
+        discourses_df: pd.DataFrame = self._df.loc[self._df[ID] == text_id].reset_index(drop=True)
         if purify_discourses:
             discourses_df.loc[:, DISCOURSE_TEXT] = discourses_df[DISCOURSE_TEXT].apply(
                 self.purifier.purify
@@ -64,7 +66,8 @@ class TextLoader:
                 row.discourse_start,  # type: ignore[attr-defined]
                 row.discourse_end,  # type: ignore[attr-defined]
                 row.discourse_text,  # type: ignore[attr-defined]
-                row.discourse_type,  # type: ignore[attr-defined]
+                DiscourseType(row.discourse_type),  # type: ignore[attr-defined]
+                row.predictionstring,  # type: ignore[attr-defined]
             )
             discourses.append(discourse)
 
@@ -74,17 +77,3 @@ class TextLoader:
         text_id = np.random.choice(self.unique_ids)
 
         return self.load_text_with_id(text_id, purify_discourses)
-
-
-if __name__ == "__main__":
-    text_loader = TextLoader()
-
-    counter = 0
-    for text_id in text_loader:
-        if counter == 10:
-            break
-
-        text = text_loader.load_text_with_id(text_id, purify_discourses=True)
-
-        print(text)
-        counter += 1
