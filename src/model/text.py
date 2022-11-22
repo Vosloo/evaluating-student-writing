@@ -8,6 +8,10 @@ class Text:
         self.words = text.split()
         self.discourses = discourses
 
+        parts, gap_len = self._get_non_classified_parts()
+        self.non_classified_parts = parts
+        self.gap_len = gap_len
+
     def __str__(self) -> str:
         return self.text
 
@@ -26,3 +30,24 @@ class Text:
     @property
     def info(self) -> str:
         return f"Text id: {self.id}; Length: {len(self.text)}; Discourses: {len(self.discourses)}"
+
+    def _get_non_classified_parts(self) -> tuple[list[tuple[int, int]], int]:
+        if len(self.discourses) == 0:
+            return [(0, len(self) - 1)], len(self)
+
+        non_classified_parts = []
+        gap_len = 0
+
+        curr_ind = 0
+        for discourse in self.discourses:
+            if discourse.ind_start > curr_ind:
+                gap_len += discourse.ind_start - curr_ind
+                non_classified_parts.append((curr_ind, discourse.ind_start - 1))
+
+            curr_ind = discourse.ind_end + 1
+
+        if curr_ind < len(self):
+            gap_len += len(self) - curr_ind
+            non_classified_parts.append((curr_ind, len(self) - 1))
+
+        return non_classified_parts, gap_len

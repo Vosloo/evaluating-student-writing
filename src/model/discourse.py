@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from functools import cached_property
 
+from .discourse_type import DiscourseType
+
 
 @dataclass
 class Discourse:
@@ -10,7 +12,7 @@ class Discourse:
         discourse_start: int,
         discourse_end: int,
         discourse_text: str,
-        discourse_type: str,
+        discourse_type: DiscourseType,
         predictionstring: str,
     ):
         self.id = discourse_id
@@ -21,7 +23,7 @@ class Discourse:
         self._predictionstring = predictionstring
 
     def __str__(self) -> str:
-        header = f"--- {self.id} ({self.ind_start} -> {self.ind_end}) - {self.type} ---"
+        header = f"--- {self.id} ({self.ind_start} -> {self.ind_end}) - {self.type.value} ---"
         return f"{header}\n{self.text}\n{'-' * len(header)}"
 
     def __repr__(self) -> str:
