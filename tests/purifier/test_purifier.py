@@ -10,8 +10,3 @@ class TestPurifier:
         purified = purifier.purify(test_case["input"])
 
         assert purified == test_case["expected"]
-
-
-@pytest.fixture
-def purifier() -> Purifier:
-    return Purifier()
