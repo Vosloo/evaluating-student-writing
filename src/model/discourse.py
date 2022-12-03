@@ -23,7 +23,11 @@ class Discourse:
         self._predictionstring = predictionstring
 
     def __str__(self) -> str:
-        header = f"--- {self.id} ({self.ind_start} -> {self.ind_end}) - {self.type.value} ---"
+        pred_start, pred_end = self.predictionstring[0], self.predictionstring[-1]
+        header = (
+            f"--- {self.id} ({self.ind_start} -> {self.ind_end} |"
+            f" {pred_start} -> {pred_end}) - {self.type.value} ---"
+        )
         return f"{header}\n{self.text}\n{'-' * len(header)}"
 
     def __repr__(self) -> str:
