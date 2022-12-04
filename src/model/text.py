@@ -31,6 +31,9 @@ class Text:
     def info(self) -> str:
         return f"Text id: {self.id}; Length: {len(self.text)}; Discourses: {len(self.discourses)}"
 
+    def split(self) -> list[str]:
+        return self.words
+
     def _get_non_classified_parts(self) -> tuple[list[tuple[int, int]], int]:
         if len(self.discourses) == 0:
             return [(0, len(self) - 1)], len(self)

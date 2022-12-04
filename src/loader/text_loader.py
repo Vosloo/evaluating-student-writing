@@ -48,6 +48,15 @@ class TextLoader:
 
         return self.unique_ids_shuffled
 
+    def _fix_predictionstring(
+        self, text: str, disc_start: int, disc_end: int, predictionstring: str
+    ) -> str:
+        # TODO
+        text[disc_start:disc_end].split()
+        # pred_start, pred_end = int(predictionstring[0]), int(predictionstring[-1])
+        text.split()
+        return ""
+
     @property
     def df(self) -> pd.DataFrame:
         return self._df
