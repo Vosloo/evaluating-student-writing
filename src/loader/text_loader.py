@@ -1,4 +1,4 @@
-from typing import Generator, Union
+from typing import Union, Iterator
 
 import numpy as np
 import pandas as pd
@@ -30,7 +30,7 @@ class TextLoader:
         self.unique_ids_shuffled: Union[np.ndarray, None] = None
         self.purifier: Purifier = Purifier()
 
-    def __iter__(self) -> Generator[str, None, None]:
+    def __iter__(self) -> Iterator[str]:
         for text_id in self.unique_ids:
             yield text_id
 
@@ -48,22 +48,44 @@ class TextLoader:
 
         return self.unique_ids_shuffled
 
-    def _fix_predictionstring(
-        self, text: str, disc_start: int, disc_end: int, predictionstring: str
-    ) -> str:
-        # TODO
-        text[disc_start:disc_end].split()
-        # pred_start, pred_end = int(predictionstring[0]), int(predictionstring[-1])
-        text.split()
-        return ""
+    # def _is_predictionstring_valid(
+    #     self, text_id: int, text: str, disc_start: int, disc_end: int, predictionstring: str
+    # ) -> tuple[bool, str]:
+    #     disc_words = text[disc_start:disc_end].split()
+    #     pred_idx = predictionstring.split()
+    #     pred_start, pred_end = int(pred_idx[0]), int(pred_idx[-1])
+
+    #     words = text.split()
+    #     if disc_words[0] in (".", ",", "!", "?"):
+    #         pred_end -= 1
+    #         del disc_words[0]
+
+    #     selected = words[pred_start : pred_end + 1]
+
+    #     disc_words[-1] = disc_words[-1].strip(".,!?")
+    #     selected[-1] = selected[-1].strip(".,!?")
+
+    #     if disc_words != selected:
+    #         print("id:", text_id)
+    #         print(f"{disc_words} !=\n{selected}", end="\n\n")
+    #         return False, ""
+
+    #     return True, " ".join(range(pred_start, pred_end + 1))
 
     @property
     def df(self) -> pd.DataFrame:
         return self._df
 
     def iterate(
-        self, offset: int = 0, limit: int = 0, shuffle: bool = False, seed: Union[int, None] = None
-    ) -> Generator[Text, None, None]:
+        self,
+        offset: int = 0,
+        limit: int = 0,
+        shuffle: bool = False,
+        seed: Union[int, None] = None,
+        purify_text: bool = False,
+        purify_discourses: bool = False,
+        verbose: bool = False,
+    ) -> Iterator[Text]:
         """
         Iterate over the texts in the dataset.
 
@@ -83,8 +105,11 @@ class TextLoader:
         else:
             ids = self.unique_ids[offset : offset + limit]
 
-        for text_id in ids:
-            yield self.load_text_with_id(text_id)
+        for ind, text_id in enumerate(ids):
+            if verbose:
+                print(f"\r{ind + 1:3} / {len(ids)}", end="")
+
+            yield self.load_text_with_id(text_id, purify_discourses, purify_text)
 
     def load_text_with_id(
         self, text_id: str, purify_discourses: bool = False, purify_text: bool = False
@@ -103,12 +128,19 @@ class TextLoader:
 
         discourses = []
         for row in discourses_df.itertuples():
+            # (is_predictionstring_valid, predictionstring) = self._is_predictionstring_valid(
+            #     text_id, text, row.discourse_start, row.discourse_end, row.predictionstring  # type: ignore[attr-defined] # noqa: E501
+            # )
+
             discourse = Discourse(
                 row.discourse_id,  # type: ignore[attr-defined]
                 row.discourse_start,  # type: ignore[attr-defined]
                 row.discourse_end,  # type: ignore[attr-defined]
                 row.discourse_text,  # type: ignore[attr-defined]
                 DiscourseType(row.discourse_type),  # type: ignore[attr-defined]
+                # self._is_predictionstring_valid(
+                #     text_id, text, row.discourse_start, row.discourse_end, row.predictionstring  # type: ignore[attr-defined] # noqa: E501
+                # ),
                 row.predictionstring,  # type: ignore[attr-defined]
             )
             discourses.append(discourse)
