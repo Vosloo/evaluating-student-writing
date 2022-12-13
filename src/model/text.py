@@ -1,3 +1,4 @@
+from typing import Union
 from .discourse import Discourse
 
 
@@ -30,6 +31,14 @@ class Text:
     @property
     def info(self) -> str:
         return f"Text id: {self.id}; Length: {len(self.text)}; Discourses: {len(self.discourses)}"
+
+    def index(self, phrase: str, start: Union[int, None] = None) -> int:
+        try:
+            res = self.text.index(phrase, start)
+        except ValueError:
+            raise ValueError(f"Phrase '{phrase}' not found for start {start} in text '{self.id}'")
+
+        return res
 
     def split(self) -> list[str]:
         return self.words

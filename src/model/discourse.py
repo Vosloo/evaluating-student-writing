@@ -19,6 +19,7 @@ class Discourse:
         self.ind_start = discourse_start
         self.ind_end = discourse_end
         self.text = discourse_text
+        self.words = discourse_text.split()
         self.type = discourse_type
         self._predictionstring = predictionstring
 
