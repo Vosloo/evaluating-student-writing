@@ -6,7 +6,9 @@ COMMON_DOMAINS = ["org", "com", "html", "htm", "en", "uk", "net", "edu", "php", 
 class Purifier:
     REGEX_ATTACHMENT_NUMBER = (r"\(\d{1,}\)", "")  # (1), (12), etc.
     # leaves only letters, numbers, spaces, newlines, apostrophes and dots
-    REGEX_LEAVE_SPECIFIC_CHARACTERS = (r"[^\p{L}\d\s\n\?.]", " ")
+    REGEX_REPLACE_QUESTION_MARKS = (r"\?", ".")
+    REGEX_LEAVE_SPECIFIC_CHARACTERS = (r"[^a-zA-Z\d\s\n'\.]", " ")
+    REGEX_REMOVE_WILD_APHOSTROPHES = (r"(?<!\w)'|'(?!\w)", "")
     REGEX_MULTIPLE_NEWLINES = (r"\n{2,}", "\n")
     REGEX_NEWLINES_SENTENCES = (r"\n(.)", r" \1")
     REGEX_HEX_SPACE = (r"\xa0", " ")
@@ -18,7 +20,7 @@ class Purifier:
         r"(?P<pre>[^\d]),(?P<after>[^\s])|,(?P<after1>[^\d\s])",  # that,"In => that, "In
         r"\g<pre>, \g<after>\g<after1>",  # 3,477 => 3,477 (stays the same)
     )
-    REGEX_LEAVE_ONE_DOT_QUESTION_MARK = (r"([.?])+", r"\1 ")
+    REGEX_LEAVE_ONE_DOT_QUESTION_MARK = (r"\.+", r". ")
     REGEX_DOT_DOMAIN = (r"\.\s*({domains})(?!\w)", r".\1")
     REGEX_LINKS = (
         r"( ?(?:(?:ftp|https?):\/\/(?:www\.)|www\.|\w+@|)? ?\w+(?P<sub_domains>\.(?:{domains}))"
@@ -31,6 +33,7 @@ class Purifier:
 
     def purify(self, text: str) -> str:
         text = re.sub(*Purifier.REGEX_LEAVE_SPECIFIC_CHARACTERS, text)
+        text = re.sub(*Purifier.REGEX_REMOVE_WILD_APHOSTROPHES, text)
         text = re.sub(*self._embed_domains(Purifier.REGEX_DOT_DOMAIN), text, flags=re.IGNORECASE)
         text = re.sub(*self._embed_domains(Purifier.REGEX_LINKS), text, flags=re.IGNORECASE)
         text = re.sub(*Purifier.REGEX_ATTACHMENT_NUMBER, text)
