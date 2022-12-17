@@ -32,7 +32,7 @@ class Purifier:
     REGEX_SPLIT_IF = (r"(\w)if ", r"\1 if ")
 
     def purify(self, text: str) -> str:
-        text = re.sub(*Purifier.REGEX_LEAVE_SPECIFIC_CHARACTERS, text)
+        text = re.sub(*Purifier.REGEX_LEAVE_SPECIFIC_CHARACTERS, text, flags=re.ASCII)
         text = re.sub(*Purifier.REGEX_REMOVE_WILD_APHOSTROPHES, text)
         text = re.sub(*self._embed_domains(Purifier.REGEX_DOT_DOMAIN), text, flags=re.IGNORECASE)
         text = re.sub(*self._embed_domains(Purifier.REGEX_LINKS), text, flags=re.IGNORECASE)
