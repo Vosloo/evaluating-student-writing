@@ -23,9 +23,9 @@ from src.model import DatasetType  # noqa: E402
 
 wandb.init(project="discourse-ner-test", entity="evaluating-student-writing")
 wandb.config = {
-    "learning_rate": 2,
+    "learning_rate": 0.01,
     "mini_batch_size": 128,
-    "max_epochs": 1,
+    "max_epochs": 40,
 }
 
 loader = TextLoader(DatasetType.V1_WITH_PREDICTIONSTRING)
@@ -78,22 +78,25 @@ if Path(checkpoint).exists():
     trainer.resume(
         tagger,
         base_path="models/",
-        max_epochs=30,
+        max_epochs=40,
     )
 else:
     trainer.train(
         "models/",
-        learning_rate=2,
+        learning_rate=0.01,
         mini_batch_size=128,
-        max_epochs=1,
+        max_epochs=40,
         patience=4,
-        anneal_factor=0.5,
+        anneal_factor=0.9,
         num_workers=8,
+        main_evaluation_metric=("weighted avg", "f1-score"),
         monitor_train=True,
         write_weights=True,
         create_file_logs=True,
         create_loss_file=True,
+        optimizer=torch.optim.Adam,
         checkpoint=True,
+        shuffle=True,
         embeddings_storage_mode="gpu",
         train_with_dev=False,
     )
