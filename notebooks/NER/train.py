@@ -13,6 +13,8 @@ from flair.embeddings import (  # noqa: E402 F401
     FlairEmbeddings,
     StackedEmbeddings,
     TransformerWordEmbeddings,
+    ELMoEmbeddings,
+    FastTextEmbeddings,
     WordEmbeddings,
 )
 from flair.models import SequenceTagger  # noqa: E402
@@ -23,7 +25,7 @@ from src.model import DatasetType  # noqa: E402
 
 wandb.init(project="discourse-ner-test", entity="evaluating-student-writing")
 wandb.config = {
-    "learning_rate": 0.01,
+    "learning_rate": 0.1,
     "mini_batch_size": 128,
     "max_epochs": 40,
 }
@@ -38,7 +40,7 @@ corpus: Corpus = ColumnCorpus(
     dev_file="NER_dev.txt",
     test_file="NER_test.txt",
     column_delimiter=" ",
-    document_separator_token="<DOC>",
+    document_separator_token="-DOCSTART- -X- O O",
     in_memory=True,
 )
 corpus.filter_empty_sentences()
@@ -48,7 +50,9 @@ label_dict = corpus.make_label_dictionary(label_type="ner")
 
 embedding_types = [
     # GloVe embeddings>
-    WordEmbeddings("glove"),
+    # WordEmbeddings("glove"),
+    ELMoEmbeddings("original"),
+    FastTextEmbeddings("wiki.simple"),
     # contextual string embeddings, forward
     # FlairEmbeddings('news-forward'),
     # contextual string embeddings, backward
@@ -83,21 +87,21 @@ if Path(checkpoint).exists():
 else:
     trainer.train(
         "models/",
-        learning_rate=0.01,
+        learning_rate=0.1,
         mini_batch_size=128,
         max_epochs=40,
         patience=4,
-        anneal_factor=0.9,
+        anneal_factor=0.7,
         num_workers=8,
         main_evaluation_metric=("weighted avg", "f1-score"),
-        monitor_train=True,
+        monitor_train=False,
         write_weights=True,
         create_file_logs=True,
         create_loss_file=True,
         optimizer=torch.optim.Adam,
         checkpoint=True,
-        shuffle=True,
         embeddings_storage_mode="gpu",
+        shuffle=False,
         train_with_dev=False,
     )
 
