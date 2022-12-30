@@ -1,5 +1,4 @@
-## Run training from this directory for either flair or spacy.
-## Models should be saved into models directory.
+## Models should be saved into used library's models directory.
 ## `wandb` directory is created by wandb (duh) and is there to keep track of all runs.
 
 ---
