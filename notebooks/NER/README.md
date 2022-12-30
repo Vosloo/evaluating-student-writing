@@ -18,10 +18,10 @@ python -m spacy convert -c ner flair/data/NER_dev.txt spacy/data
 python -m spacy convert -c ner flair/data/NER_test.txt spacy/data
 ```
 
-If the **spacy/config.cfg** file is not present you can generate it from **spacy/base_config.cfg** file by executing the following command:
+If the **spacy/configs/config.cfg** file is not present you can generate it from **spacy/configs/base_config.cfg** file by executing the following command:
 
 ```
-python -m spacy init fill-config spacy/base_config.cfg spacy/config.cfg
+python -m spacy init fill-config spacy/configs/base_config.cfg spacy/configs/config.cfg
 ```
 
 If you want to send output to wandb please modify the [training.logger] section in **spacy/config.cfg** with:
@@ -41,5 +41,5 @@ To run the training process execute the following command (please adjust the `MO
 (If you want to run the training on GPU please add `--gpu-id 0` parameter at the end)
 
 ```
-python -m spacy train spacy/config.cfg --verbose --output spacy/models/MODEL_NAME
+python -m spacy train spacy/configs/config.cfg --verbose --output spacy/models/MODEL_NAME
 ```
