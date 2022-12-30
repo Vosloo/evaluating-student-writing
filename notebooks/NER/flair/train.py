@@ -23,7 +23,7 @@ from flair.trainers import ModelTrainer  # noqa: E402
 from src.loader import TextLoader  # noqa: E402
 from src.model import DatasetType  # noqa: E402
 
-wandb.init(project="discourse-ner-test", entity="evaluating-student-writing")
+wandb.init(project="discourse-ner", entity="evaluating-student-writing")
 wandb.config = {
     "learning_rate": 0.1,
     "mini_batch_size": 128,
