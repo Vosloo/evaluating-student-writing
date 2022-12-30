@@ -1,3 +1,4 @@
+## Run training from this directory.
 ## Models should be saved into used library's models directory.
 ## `wandb` directory is created by wandb (duh) and is there to keep track of all runs.
 

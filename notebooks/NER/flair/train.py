@@ -23,10 +23,10 @@ from flair.trainers import ModelTrainer  # noqa: E402
 from src.loader import TextLoader  # noqa: E402
 from src.model import DatasetType  # noqa: E402
 
-MODELS_DIR = "models/"
-DATA_DIR = "data/"
+MODELS_DIR = Path(__file__).parent / "models"
+DATA_DIR = Path(__file__).parent / "data"
 
-RUN_NAME = "flair-ner"
+RUN_NAME = "flair-ner-test"
 LR = 0.1
 MINI_BATCH_SIZE = 128
 MAX_EPOCHS = 40
@@ -98,7 +98,7 @@ trainer.train(
     train_with_dev=False,
 )
 
-model = SequenceTagger.load(MODELS_DIR + "final-model.pt")
+model = SequenceTagger.load(MODELS_DIR / "final-model.pt")
 
 text = loader.load_random_text()
 
