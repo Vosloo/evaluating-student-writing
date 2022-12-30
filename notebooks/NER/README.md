@@ -26,12 +26,14 @@ python -m spacy init fill-config spacy/base_config.cfg spacy/config.cfg
 
 If you want to send output to wandb please modify the [training.logger] section in **spacy/config.cfg** with:
 
+**(Please remember to change <#NAME_OF_RUN#> parameter to the name of your run)**
+
 ```
 [training.logger]
 @loggers = "spacy.WandbLogger.v4"
-project_name = "discourse-ner" # Project name in wandb
-entity = "evaluating-student-writing" # Entity name in wandb
-run_name = "<NAME_OF_RUN>"
+project_name = "discourse-ner"
+entity = "evaluating-student-writing"
+run_name = "<#NAME_OF_RUN#>"
 ```
 
 To run the training process execute the following command (please adjust the `MODEL_NAME` in output parameter):
@@ -39,5 +41,5 @@ To run the training process execute the following command (please adjust the `MO
 (If you want to run the training on GPU please add `--gpu-id 0` parameter at the end)
 
 ```
-python -m spacy train config.cfg --verbose --output spacy/models/MODEL_NAME
+python -m spacy train spacy/config.cfg --verbose --output spacy/models/MODEL_NAME
 ```
