@@ -28,20 +28,34 @@ python -m spacy init fill-config spacy/configs/base_config.cfg spacy/configs/con
 
 If you want to send output to wandb please modify the [training.logger] section in **spacy/config.cfg** with:
 
-**(Please remember to change <#NAME_OF_RUN#> parameter to the name of your run)**
-
 ```
 [training.logger]
 @loggers = "spacy.WandbLogger.v4"
 project_name = "discourse-ner"
 entity = "evaluating-student-writing"
-run_name = "<#NAME_OF_RUN#>"
 ```
 
 To run the training process execute the following command (please adjust the `MODEL_NAME` in output parameter):
 
-(If you want to run the training on GPU please add `--gpu-id 0` parameter at the end)
+ - If you want to run the training on GPU please add `--gpu-id 0` parameter at the end
+ - If you want to name your run please set env variable WANDB_NAME (if present the run will be named according to the variable)
 
 ```
 python -m spacy train spacy/configs/config.cfg --verbose --output spacy/models/MODEL_NAME
+```
+
+---
+
+## Docker
+
+Spacy directory also includes Dockerfile created for GPU that can be built with:
+
+```
+docker build -t '<TAG_OF_THE_IMAGE>' .
+```
+
+To run the image you can use:
+
+```
+docker run --rm --gpus all -e WANDB_API_KEY='<YOUR_API_KEY>' -e WANDB_NAME='<YOUR_RUN_NAME>' <YOUR_IMAGE_TAG>:latest
 ```
