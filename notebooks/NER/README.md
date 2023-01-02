@@ -12,7 +12,7 @@ To run training for flair please look into **flair/train.py** file. Please adjus
 
 Firstly you need to create IOB data format for the dataset.
 To do that please execute the **flair/column_corpus_generator.ipynb** notebook.
-After that you have to convert the data (from **flair/data**) to spacy format and include it in **spacy/data** directory. To do so please execute the following commands:
+After that you have to convert the data (from **flair/data**) to spacy format and include it in **spacy/data** directory (**You must create the directory manually if it does not exist**). To do so please execute the following commands:
 
 ```
 python -m spacy convert -c ner flair/data/NER_train.txt spacy/data
