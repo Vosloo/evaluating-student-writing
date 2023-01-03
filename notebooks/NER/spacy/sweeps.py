@@ -12,12 +12,11 @@ spacy.require_gpu()
 
 PROJECT = "discourse-ner"
 ENTITY = "evaluating-student-writing"
-NAME = "discourse_ner_sweep_1"
 
 
 def main(default_config: Path, output_path: Path) -> None:
     loaded_local_config = util.load_config(default_config)
-    with wandb.init(project=PROJECT, entity=ENTITY, name=NAME) as run:  # type: ignore
+    with wandb.init(project=PROJECT, entity=ENTITY) as run:  # type: ignore
         sweeps_config = Config(util.dot_to_dict(run.config))
         merged_config = Config(loaded_local_config).merge(sweeps_config)
         nlp = init_nlp(merged_config)
