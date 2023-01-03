@@ -4,7 +4,7 @@ metric:
   name: ents_f
 command:
   - ${env}
-  - ${interpreter}
+  - python3.9
   - spacy/sweeps.py
   - spacy/configs/config.cfg
   - spacy/models
