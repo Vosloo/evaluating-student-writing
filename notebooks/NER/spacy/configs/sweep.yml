@@ -20,6 +20,10 @@ parameters:
     - 1024
     - 2048
     - 4096
+  training.optimizer.eps:
+    values:
+    - 0.00000001
+    - 0.0001
   training.dropout:
     distribution: uniform
     max: 0.5
