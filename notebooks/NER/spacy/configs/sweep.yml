@@ -1,0 +1,50 @@
+method: bayes
+metric:
+  goal: maximize
+  name: ents_f
+command:
+  - ${env}
+  - python3.9
+  - spacy/sweeps.py
+  - spacy/configs/config.cfg
+  - spacy/models
+parameters:
+  components.ner.model.hidden_width:
+    values:
+    - 32
+    - 64
+    - 128
+    - 256
+  components.transformer.max_batch_items:
+    values:
+    - 1024
+    - 2048
+    - 4096
+  training.optimizer.eps:
+    values:
+    - 0.00000001
+    - 0.0001
+  training.dropout:
+    distribution: uniform
+    max: 0.5
+    min: 0.05
+  training.patience:
+    values:
+    - 400
+    - 800
+    - 1200
+    - 1600
+  training.batcher.size:
+    values:
+    - 1000
+    - 2000
+    - 4000
+  training.batcher.buffer:
+    values:
+    - 128
+    - 256
+    - 512
+  training.optimizer.learn_rate:
+    distribution: uniform
+    max: 0.01
+    min: 0.001
