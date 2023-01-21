@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Automatic text segmentation and classification of argumentative and rhetorical elements in essays"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.svg') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/base.css') }}"
+    />
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <header id="header">
+      <div class="header-middle">
+        <a class="header-middle__logo" href="{{ url_for('index') }}">
+          <span>Feedback Machine</span>
+        </a>
+        <a
+          class="header-middle__github"
+          href="https://github.com/Vosloo/evaluating-student-writing"
+        >
+          <img
+            src="{{ url_for('static', filename='img/github.svg') }}"
+            alt=""
+          />
+        </a>
+      </div>
+    </header>
+    <div class="middle-container">{% block body %}{% endblock %}</div>
+  </body>
+</html>

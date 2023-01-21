@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block head %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/index.css') }}"
+/>
+<title>Feedback machine</title>
+
+{% block scripts %}
+<script>
+  const updateLabel = () => {
+    const file = document.getElementById('file')
+    const label = document.getElementById('file-label')
+    label.innerHTML = file.files[0].name
+  }
+</script>
+{% endblock %} {% endblock %} {% block body %}
+
+<div class="container">
+  <form action="/" method="POST" class="input" enctype="multipart/form-data">
+    <div>
+      <input type="file" name="file" id="file" accept="text/plain" onchange="updateLabel()"/>
+      <label for="file" class="btn" id="file-label">Upload file</label>
+      <p class="input__or"><span>or</span></p>
+      <textarea
+        type="submit"
+        name="text"
+        class="input__text"
+        placeholder="Enter text ..."
+        rows="10"
+      ></textarea>
+    </div>
+    <input type="submit" value="Process text" class="btn input__submit" />
+  </form>
+</div>
+
+{% endblock %}
