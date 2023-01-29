@@ -44,6 +44,13 @@ To run the training process execute the following command (please adjust the `MO
 python -m spacy train spacy/configs/config.cfg --verbose --output spacy/models/MODEL_NAME
 ```
 
+To run the evaluation on the test set please run the following command (please adjust path to model):
+
+(Also please note that if you want to use GPU you have to add `--gpu-id 0`)
+
+```
+python -m spacy evaluate /path/to/model data/NER_test.spacy --output data/test_metrics_output.json --displacy-path data --displacy-limit 10
+```
 ---
 
 ## Docker
